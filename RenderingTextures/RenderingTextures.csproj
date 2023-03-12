@@ -12,10 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="bin\Debug\net7.0\Content\Graphics\velaptor-mascot.png" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Remove="bin\**" />
     </ItemGroup>
 

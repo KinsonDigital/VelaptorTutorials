@@ -10,8 +10,8 @@ namespace HelloVelaptor;
 public class Game : Window
 {
     private readonly Random random = new (); // Creates random numbers
+    private readonly IFontRenderer fontRenderer; // Renders text
     private IFont font; // The type of font
-    private IFontRenderer fontRenderer; // Renders text
     private Color textColor = Color.White; // The color of the text
     private double elapsedMS; // Total amount of time that has passed in milliseconds
 
@@ -27,7 +27,7 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
-        this.font = ContentLoader.LoadFont("TimesNewRoman-Regular.ttf", 24);
+        this.font = ContentLoader.LoadFont("timesNewRoman-Regular", 24);
 
         base.OnLoad();
     }
@@ -71,7 +71,7 @@ public class Game : Window
         var y = (int)(Height / 2); // Center of the window vertically
 
         // Render the string to the screen with the randomized color
-        this.fontRenderer.Render(this.font, "Hello Velaptor!!", x, y, Color.Orange);// this.textColor);
+        this.fontRenderer.Render(this.font, "Hello Velaptor!!", x, y, this.textColor);
 
         IRenderer.End();
 
