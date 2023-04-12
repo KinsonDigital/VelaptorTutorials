@@ -4,8 +4,6 @@
 
 namespace RotatingTextures;
 
-using System.Drawing;
-using Velaptor.Graphics;
 using Velaptor;
 using Velaptor.Content;
 using Velaptor.Factories;
