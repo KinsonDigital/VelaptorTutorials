@@ -2,4 +2,5 @@
 // Copyright (c) KinsonDigital. All rights reserved.
 // </copyright>
 
-Console.WriteLine("Hello World!");
+var game = new AtlasTextures.Game();
+game.Show();

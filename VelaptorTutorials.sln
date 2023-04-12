@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenderingTextures", "Render
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RotatingTextures", "RotatingTextures\RotatingTextures.csproj", "{61B0C2F4-780A-4158-A04D-364B0BFEDAAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextureAtlas", "TextureAtlas\TextureAtlas.csproj", "{770CEC19-32F8-4FF1-962F-023162F7DE78}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtlasTextures", "AtlasTextures\AtlasTextures.csproj", "{770CEC19-32F8-4FF1-962F-023162F7DE78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
