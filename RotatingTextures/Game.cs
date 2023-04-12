@@ -69,19 +69,8 @@ public class Game : Window
         var x = (int)(Width / 2); // Center of the window horizontally
         var y = (int)(Height / 2); // Center of the window vertically
 
-        var srcRect = new Rectangle(0, 0, (int)this.gearTexture.Width, (int)this.gearTexture.Height);
-        var destRect = new Rectangle(x, y, (int)this.gearTexture.Width, (int)this.gearTexture.Height);
-
         // Render the gear texture in the center of the window
-        this.textureRenderer.Render(
-            this.gearTexture,
-            srcRect,
-            destRect,
-            1,
-            this.angle,
-            Color.White,
-            RenderEffects.None,
-            1);
+        this.textureRenderer.Render(this.gearTexture, x, y, this.angle);
 
         // Render the text texture on top of the gear texture in the center of the window
         this.textureRenderer.Render(this.textTexture, x, y, 2);
