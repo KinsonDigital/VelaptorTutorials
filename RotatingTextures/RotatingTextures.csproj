@@ -21,16 +21,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="bin\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="bin\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="bin\**" />
-      <None Update="Content\Graphics\velaptor-mascot.png">
+      <None Update="Content\Graphics\gear.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Content\Graphics\text.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

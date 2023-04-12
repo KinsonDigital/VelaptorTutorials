@@ -2,5 +2,5 @@
 // Copyright (c) KinsonDigital. All rights reserved.
 // </copyright>
 
-var game = new RenderingTextures.Game();
+var game = new RotatingTextures.Game();
 game.Show();
