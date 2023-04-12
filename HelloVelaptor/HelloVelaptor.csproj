@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="KinsonDigital.Velaptor" Version="1.0.0-preview.18" />
+      <PackageReference Include="KinsonDigital.Velaptor" Version="1.0.0-preview.19" />
     </ItemGroup>
 
 </Project>
