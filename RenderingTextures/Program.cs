@@ -1,7 +1,6 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿// <copyright file="Program.cs" company="KinsonDigital">
+// Copyright (c) KinsonDigital. All rights reserved.
+// </copyright>
 
-
-using RenderingTextures;
-
-var game = new Game();
+var game = new RenderingTextures.Game();
 game.Show();

@@ -1,20 +1,30 @@
-﻿using Velaptor;
+﻿// <copyright file="Game.cs" company="KinsonDigital">
+// Copyright (c) KinsonDigital. All rights reserved.
+// </copyright>
+
+namespace HelloVelaptor;
+
+using Velaptor;
 using Velaptor.Content.Fonts;
 using Velaptor.Factories;
 using Velaptor.Graphics.Renderers;
 using System.Drawing;
 using Velaptor.UI;
 
-namespace HelloVelaptor;
-
+/// <summary>
+/// The main game class.
+/// </summary>
 public class Game : Window
 {
     private readonly Random random = new (); // Creates random numbers
     private readonly IFontRenderer fontRenderer; // Renders text
-    private IFont font; // The type of font
+    private IFont? font; // The type of font
     private Color textColor = Color.White; // The color of the text
-    private double elapsedMS; // Total amount of time that has passed in milliseconds
+    private double elapsedMs; // Total amount of time that has passed in milliseconds
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Game"/> class.
+    /// </summary>
     public Game()
     {
         Title = "Hello Velaptor";
@@ -40,12 +50,12 @@ public class Game : Window
     protected override void OnUpdate(FrameTime frameTime)
     {
         // Keep track of how many milli-seconds for the current frame
-        this.elapsedMS += frameTime.ElapsedTime.TotalMilliseconds;
+        this.elapsedMs += frameTime.ElapsedTime.TotalMilliseconds;
 
         // If 1,000 milli-seconds(1 second) has passed
-        if (this.elapsedMS >= 1000)
+        if (this.elapsedMs >= 1000)
         {
-            this.elapsedMS = 0; // Reset back to zero to restart the timer
+            this.elapsedMs = 0; // Reset back to zero to restart the timer
 
             var red = this.random.Next(0, 255); // Create a random red value
             var green = this.random.Next(0, 255); // Create a random green value
