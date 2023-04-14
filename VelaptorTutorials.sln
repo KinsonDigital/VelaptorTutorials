@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtlasTextures", "AtlasTextu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyProject", "EmptyProject\EmptyProject.csproj", "{171D0C3C-731E-4CA3-9CCB-57D47FB3EBA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyboardInput", "KeyboardInput\KeyboardInput.csproj", "{AB72E9F7-12BD-463B-91F9-29835C09D44A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceShooter", "SpaceShooter\SpaceShooter.csproj", "{AB72E9F7-12BD-463B-91F9-29835C09D44A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

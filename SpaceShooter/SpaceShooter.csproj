@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <NoWarn>CA1852,CS8602,CS8604,SA1204</NoWarn>
+        <RootNamespace>KeyboardInput</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
