@@ -5,8 +5,6 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <NoWarn>CA1852,CS8602,CS8604,SA1204</NoWarn>
-        <RootNamespace>KeyboardInput</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,12 +16,13 @@
       <None Update="Content\Graphics\ship.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Content\Graphics\orange-lazer.png">
+      <None Update="Content\Graphics\orange-laser.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="KinsonDigital.Carbonate" Version="1.0.0-preview.14" />
       <PackageReference Include="KinsonDigital.Velaptor" Version="1.0.0-preview.19" />
       <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.1">
         <PrivateAssets>all</PrivateAssets>

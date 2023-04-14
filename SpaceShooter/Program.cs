@@ -2,5 +2,5 @@
 // Copyright (c) KinsonDigital. All rights reserved.
 // </copyright>
 
-var game = new KeyboardInput.Game();
+var game = new SpaceShooter.Game();
 game.Show();
