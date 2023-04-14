@@ -32,10 +32,11 @@ public class Game : Window
     public Game()
     {
         Title = "Atlas Textures";
+        Width = 500;
+        Height = 500;
+
         var renderFactory = new RendererFactory();
         this.textureRenderer = renderFactory.CreateTextureRenderer();
-        Width = 530;
-        Height = 530;
     }
 
     /// <summary>
@@ -43,6 +44,7 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
+        // Loads the atlas.png and atlas.json file
         var atlasData = ContentLoader.LoadAtlas("atlas");
 
         this.atlasTexture = atlasData.Texture;
@@ -69,20 +71,20 @@ public class Game : Window
                 this.isFullSize = true;
             }
 
-            // Get the starting flame frame index based on if the flame has
+            // Get the starting frame index based on if the flame has
             // grown to full size or not.
             var startFrame = this.isFullSize ? 8 : 0;
 
-            // if the last frame has has been reached, reset to the starting frame
+            // If the last frame has been reached, reset to the starting frame
             this.currentFrame = this.currentFrame >= this.subTextureData.Length - 1
                 ? startFrame
                 : this.currentFrame + 1;
 
-            // Reset the elapsed time so we can wait another
+            // Reset the elapsed time so we can wait for another
             // 124ms before moving to the next frame
             this.elapsedMs = 0;
 
-            // Randomly choose to have the flame flipped horizontal or not flipped at all
+            // Randomly choose to have the flame flipped horizontally or not flipped at all
             this.horizontalLayout = this.random.Next(0, 2) == 0
                 ? RenderEffects.FlipHorizontally
                 : RenderEffects.None;
@@ -104,7 +106,7 @@ public class Game : Window
         var x = (int)(Width / 2); // Center of the window horizontally
         var y = (int)(Height / 2); // Center of the window vertically
 
-        // Get the bounds of the sub texture in the entire atlas at the current frame
+        // Get the bounds of the sub-texture in the entire atlas at the current frame
         var subBounds = this.subTextureData[this.currentFrame].Bounds;
 
         // Create the rectangle of where the frame is located in the atlas
@@ -113,7 +115,7 @@ public class Game : Window
         // Create the rectangle of the entire atlas.
         var destRect = new Rectangle(x, y, (int)this.atlasTexture.Width, (int)this.atlasTexture.Height);
 
-        // Render only the sub texture in the atlas at the center of the window
+        // Render only the sub-texture in the atlas at the center of the window
         this.textureRenderer.Render(
             this.atlasTexture,
             srcRect,
