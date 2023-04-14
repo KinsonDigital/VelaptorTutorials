@@ -2,7 +2,5 @@
 // Copyright (c) KinsonDigital. All rights reserved.
 // </copyright>
 
-using KeyboardInput;
-
-var game = new Game();
+var game = new KeyboardInput.Game();
 game.Show();

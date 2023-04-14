@@ -30,6 +30,7 @@ public class Game : Window
     protected override void OnLoad()
     {
         // TODO: Load game content here
+        base.OnLoad();
     }
 
     /// <summary>
