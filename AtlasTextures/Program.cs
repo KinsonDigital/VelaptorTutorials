@@ -2,5 +2,5 @@
 // Copyright (c) KinsonDigital. All rights reserved.
 // </copyright>
 
-var game = new HelloVelaptor.Game();
+var game = new AtlasTextures.Game();
 game.Show();

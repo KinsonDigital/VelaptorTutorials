@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenderingTextures", "Render
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RotatingTextures", "RotatingTextures\RotatingTextures.csproj", "{61B0C2F4-780A-4158-A04D-364B0BFEDAAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtlasTextures", "AtlasTextures\AtlasTextures.csproj", "{770CEC19-32F8-4FF1-962F-023162F7DE78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyProject", "EmptyProject\EmptyProject.csproj", "{171D0C3C-731E-4CA3-9CCB-57D47FB3EBA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{61B0C2F4-780A-4158-A04D-364B0BFEDAAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61B0C2F4-780A-4158-A04D-364B0BFEDAAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61B0C2F4-780A-4158-A04D-364B0BFEDAAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{770CEC19-32F8-4FF1-962F-023162F7DE78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{770CEC19-32F8-4FF1-962F-023162F7DE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{770CEC19-32F8-4FF1-962F-023162F7DE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{770CEC19-32F8-4FF1-962F-023162F7DE78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{171D0C3C-731E-4CA3-9CCB-57D47FB3EBA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{171D0C3C-731E-4CA3-9CCB-57D47FB3EBA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{171D0C3C-731E-4CA3-9CCB-57D47FB3EBA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{171D0C3C-731E-4CA3-9CCB-57D47FB3EBA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
