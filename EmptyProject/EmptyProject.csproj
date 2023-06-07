@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="KinsonDigital.Velaptor" Version="1.0.0-preview.19" />
+      <PackageReference Include="KinsonDigital.Velaptor" Version="1.0.0-preview.21" />
       <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.1">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

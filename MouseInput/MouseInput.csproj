@@ -5,18 +5,12 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <NoWarn>CA1852,CS8602,CS8604,SA1204</NoWarn>
+        <NoWarn>CA1852,CS8602,CS8604</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
       <None Remove="stylecop.json" />
       <AdditionalFiles Include="stylecop.json" />
-      <None Update="Content\Atlas\atlas.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Content\Atlas\atlas.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
 
     <ItemGroup>

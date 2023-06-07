@@ -5,10 +5,11 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <NoWarn>CA1852,CS8602,CS8604</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="KinsonDigital.Velaptor" Version="1.0.0-preview.20" />
+      <PackageReference Include="KinsonDigital.Velaptor" Version="1.0.0-preview.21" />
       <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.1">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
