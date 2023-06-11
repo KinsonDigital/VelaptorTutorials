@@ -16,7 +16,7 @@ using ISound = Velaptor.Content.ISound;
 /// </summary>
 public class Game : Window
 {
-    private readonly IAppInput<KeyboardState> keyboard;
+    private IAppInput<KeyboardState>? keyboard;
     private KeyboardState prevKeyState;
     private ISound? music;
 
@@ -27,7 +27,6 @@ public class Game : Window
     {
         Width = 900;
         Height = 600;
-        this.keyboard = InputFactory.CreateKeyboard();
     }
 
     /// <summary>
@@ -35,6 +34,7 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
+        this.keyboard = InputFactory.CreateKeyboard();
         this.music = ContentLoader.LoadSound("deep-consistency");
 
         base.OnLoad();
@@ -54,7 +54,6 @@ public class Game : Window
             return this.prevKeyState.IsKeyDown(key) && currKeyState.IsKeyUp(key);
         }
 
-        // If the space key was pressed
         if (IsPressed(KeyCode.Space))
         {
             if (this.music.State is SoundState.Paused or SoundState.Stopped)
