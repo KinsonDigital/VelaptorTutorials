@@ -11,7 +11,7 @@
     <ItemGroup>
       <None Remove="stylecop.json" />
       <AdditionalFiles Include="stylecop.json" />
-      <None Update="Content\Sounds\bliptastic.ogg">
+      <None Update="Content\Sounds\deep-consistency.ogg">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

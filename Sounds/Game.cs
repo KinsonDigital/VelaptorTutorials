@@ -35,7 +35,7 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
-        this.music = ContentLoader.LoadSound("bliptastic");
+        this.music = ContentLoader.LoadSound("deep-consistency");
 
         base.OnLoad();
     }
