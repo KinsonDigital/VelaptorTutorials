@@ -7,12 +7,19 @@
 // ReSharper disable ArrangeConstructorOrDestructorBody
 namespace EmptyProject;
 
+using System.Diagnostics.CodeAnalysis;
 using Velaptor;
 using Velaptor.UI;
 
 /// <summary>
 /// The main game class.
 /// </summary>
+[SuppressMessage("csharpsquid", "S1135", Justification = "Intentional for doc site.")]
+[SuppressMessage("csharpsquid", "S1135", Justification = "Intentional for doc site.")]
+[SuppressMessage(
+    "StyleCop.CSharp.LayoutRules",
+    "SA1515:Single-line comment should be preceded by blank line",
+    Justification = "Intentional for doc site.")]
 public class Game : Window
 {
     /// <summary>

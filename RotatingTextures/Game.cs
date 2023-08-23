@@ -5,6 +5,7 @@
 namespace RotatingTextures;
 
 using Velaptor;
+using Velaptor.Batching;
 using Velaptor.Content;
 using Velaptor.Factories;
 using Velaptor.Graphics.Renderers;
@@ -16,10 +17,11 @@ using Velaptor.UI;
 public class Game : Window
 {
     private readonly ITextureRenderer textureRenderer;
+    private readonly IBatcher batcher;
+    private readonly float angleSpeed = 50;
     private ITexture? textTexture;
     private ITexture? gearTexture;
     private float angle;
-    private float angleSpeed = 50;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Game"/> class.
@@ -27,8 +29,10 @@ public class Game : Window
     public Game()
     {
         Title = "Rotating Textures";
-        var renderFactory = new RendererFactory();
-        this.textureRenderer = renderFactory.CreateTextureRenderer();
+        var rendererFactory = new RendererFactory();
+        this.textureRenderer = rendererFactory.CreateTextureRenderer();
+
+        this.batcher = rendererFactory.CreateBatcher();
     }
 
     /// <summary>
@@ -62,7 +66,7 @@ public class Game : Window
     /// <param name="frameTime">The amount of time that has passed for the current frame.</param>
     protected override void OnDraw(FrameTime frameTime)
     {
-        IRenderer.Begin();
+        this.batcher.Begin();
 
         var x = (int)(Width / 2); // Center of the window horizontally
         var y = (int)(Height / 2); // Center of the window vertically
@@ -73,7 +77,7 @@ public class Game : Window
         // Render the text texture on top of the gear texture in the center of the window
         this.textureRenderer.Render(this.textTexture, x, y, 2);
 
-        IRenderer.End();
+        this.batcher.End();
 
         base.OnDraw(frameTime);
     }
