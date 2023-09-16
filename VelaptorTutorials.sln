@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyboardInput", "KeyboardIn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouseInput", "MouseInput\MouseInput.csproj", "{435A380E-A38F-4351-8AEA-391B838314F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sounds", "Sounds\Sounds.csproj", "{51C216BA-5CBF-47D9-99C9-2A71D23FF8DE}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceShooter", "SpaceShooter\SpaceShooter.csproj", "{AB72E9F7-12BD-463B-91F9-29835C09D44A}"
 EndProject
 Global
@@ -50,6 +52,10 @@ Global
 		{435A380E-A38F-4351-8AEA-391B838314F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{435A380E-A38F-4351-8AEA-391B838314F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{435A380E-A38F-4351-8AEA-391B838314F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51C216BA-5CBF-47D9-99C9-2A71D23FF8DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51C216BA-5CBF-47D9-99C9-2A71D23FF8DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51C216BA-5CBF-47D9-99C9-2A71D23FF8DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51C216BA-5CBF-47D9-99C9-2A71D23FF8DE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AB72E9F7-12BD-463B-91F9-29835C09D44A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB72E9F7-12BD-463B-91F9-29835C09D44A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB72E9F7-12BD-463B-91F9-29835C09D44A}.Release|Any CPU.ActiveCfg = Release|Any CPU

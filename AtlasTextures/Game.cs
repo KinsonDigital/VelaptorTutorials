@@ -7,6 +7,7 @@ namespace AtlasTextures;
 using System.Drawing;
 using Velaptor.Graphics;
 using Velaptor;
+using Velaptor.Batching;
 using Velaptor.Content;
 using Velaptor.Factories;
 using Velaptor.Graphics.Renderers;
@@ -19,6 +20,7 @@ public class Game : Window
 {
     private readonly ITextureRenderer textureRenderer;
     private readonly Random random = new ();
+    private readonly IBatcher batcher;
     private ITexture? atlasTexture;
     private AtlasSubTextureData[]? subTextureData;
     private RenderEffects horizontalLayout;
@@ -35,8 +37,10 @@ public class Game : Window
         Width = 500;
         Height = 500;
 
-        var renderFactory = new RendererFactory();
-        this.textureRenderer = renderFactory.CreateTextureRenderer();
+        var rendererFactory = new RendererFactory();
+        this.textureRenderer = rendererFactory.CreateTextureRenderer();
+
+        this.batcher = rendererFactory.CreateBatcher();
     }
 
     /// <summary>
@@ -101,7 +105,7 @@ public class Game : Window
     protected override void OnDraw(FrameTime frameTime)
     {
         // Start the batch
-        IRenderer.Begin();
+        this.batcher.Begin();
 
         var x = (int)(Width / 2); // Center of the window horizontally
         var y = (int)(Height / 2); // Center of the window vertically
@@ -127,7 +131,7 @@ public class Game : Window
             1);
 
         // End the batch to render the entire batch
-        IRenderer.End();
+        this.batcher.End();
 
         base.OnDraw(frameTime);
     }

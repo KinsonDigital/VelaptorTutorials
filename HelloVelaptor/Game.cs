@@ -9,6 +9,7 @@ using Velaptor.Content.Fonts;
 using Velaptor.Factories;
 using Velaptor.Graphics.Renderers;
 using System.Drawing;
+using Velaptor.Batching;
 using Velaptor.UI;
 
 /// <summary>
@@ -18,6 +19,7 @@ public class Game : Window
 {
     private readonly Random random = new (); // Creates random numbers
     private readonly IFontRenderer fontRenderer; // Renders text
+    private readonly IBatcher batcher;
     private IFont? font; // The type of font
     private Color textColor = Color.White; // The color of the text
     private double elapsedMs; // Total amount of time that has passed in milliseconds
@@ -30,6 +32,8 @@ public class Game : Window
         Title = "Hello Velaptor";
         var rendererFactory = new RendererFactory();
         this.fontRenderer = rendererFactory.CreateFontRenderer();
+
+        this.batcher = rendererFactory.CreateBatcher();
     }
 
     /// <summary>
@@ -75,7 +79,7 @@ public class Game : Window
     /// <param name="frameTime">The amount of time that has passed for the current frame.</param>
     protected override void OnDraw(FrameTime frameTime)
     {
-        IRenderer.Begin();
+        this.batcher.Begin();
 
         var x = (int)(Width / 2); // Center of the window horizontally
         var y = (int)(Height / 2); // Center of the window vertically
@@ -83,7 +87,7 @@ public class Game : Window
         // Render the string to the screen with the randomized color
         this.fontRenderer.Render(this.font, "Hello Velaptor!!", x, y, this.textColor);
 
-        IRenderer.End();
+        this.batcher.End();
 
         base.OnDraw(frameTime);
     }

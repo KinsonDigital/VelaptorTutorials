@@ -5,6 +5,7 @@
 namespace RenderingTextures;
 
 using Velaptor;
+using Velaptor.Batching;
 using Velaptor.Content;
 using Velaptor.Factories;
 using Velaptor.Graphics.Renderers;
@@ -16,6 +17,7 @@ using Velaptor.UI;
 public class Game : Window
 {
     private readonly ITextureRenderer textureRenderer;
+    private readonly IBatcher batcher;
     private ITexture? mascotTexture;
 
     /// <summary>
@@ -24,8 +26,10 @@ public class Game : Window
     public Game()
     {
         Title = "Render Textures";
-        var renderFactory = new RendererFactory();
-        this.textureRenderer = renderFactory.CreateTextureRenderer();
+        var rendererFactory = new RendererFactory();
+        this.textureRenderer = rendererFactory.CreateTextureRenderer();
+
+        this.batcher = rendererFactory.CreateBatcher();
     }
 
     /// <summary>
@@ -45,7 +49,7 @@ public class Game : Window
     /// <param name="frameTime">The amount of time that has passed for the current frame.</param>
     protected override void OnDraw(FrameTime frameTime)
     {
-        IRenderer.Begin();
+        this.batcher.Begin();
 
         var x = (int)(Width / 2); // Center of the window horizontally
         var y = (int)(Height / 2); // Center of the window vertically
@@ -53,7 +57,7 @@ public class Game : Window
         // Render the mascot image in the center of the window
         this.textureRenderer.Render(this.mascotTexture, x, y);
 
-        IRenderer.End();
+        this.batcher.End();
 
         base.OnDraw(frameTime);
     }
