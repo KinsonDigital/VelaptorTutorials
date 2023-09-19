@@ -6,7 +6,10 @@ namespace SpaceShooter;
 
 using System.Drawing;
 using System.Numerics;
-using Carbonate.UniDirectional;
+using Carbonate.Fluent;
+using Carbonate.OneWay;
+using Signals;
+using Signals.Data;
 using Velaptor;
 using Velaptor.Content;
 using Velaptor.Factories;
@@ -26,35 +29,58 @@ public class Ship : IUpdatable, IDrawable
     private readonly IAppInput<KeyboardState> keyboard;
     private readonly Vector2 minVelocity = new (-MaxVel, -MaxVel);
     private readonly Vector2 maxVelocity = new (MaxVel, MaxVel);
-    private readonly PushReactable<Vector2> posUpdater;
+    private readonly IShipSignal shipSignal;
     private readonly Weapon weapon;
+    private readonly float halfWidth;
+    private readonly float halfHeight;
+    private Rectangle worldBounds;
     private KeyboardState currentKeyState;
     private KeyboardState prevKeyState;
+    private Vector2 shipPos;
+    private Vector2 velocity;
     private bool leftKeyDown;
     private bool rightKeyDown;
     private bool upKeyDown;
     private bool downKeyDown;
     private bool isNotMovingHorizontally;
     private bool isNotMovingVertically;
-    private Vector2 shipPos;
-    private Vector2 velocity;
 
-    public Ship(Rectangle worldBounds)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Ship"/> class.
+    /// </summary>
+    /// <param name="worldSignal">Receives updates about the world.</param>
+    public Ship(
+        IWorldSignal worldSignal,
+        IShipSignal shipSignal,
+        Weapon weapon)
     {
-        this.posUpdater = new PushReactable<Vector2>();
+        var worldUpdateSubscription = ISubscriptionBuilder.Create()
+            .WithId(SignalIds.WorldDataUpdate)
+            .BuildOneWayReceive<WorldData>(worldData => this.worldBounds = worldData.WorldBounds);
+
+        worldSignal.Subscribe(worldUpdateSubscription);
+
+        this.shipSignal = shipSignal;
 
         var renderFactory = new RendererFactory();
         this.renderer = renderFactory.CreateTextureRenderer();
 
         var contentLoader = ContentLoaderFactory.CreateTextureLoader();
-        this.texture = contentLoader.Load("ship");
+        this.texture = contentLoader.Load("ghost-ship");
 
-        this.keyboard = InputFactory.CreateKeyboard();
+        this.halfWidth = this.texture.Width / 2f;
+        this.halfHeight = this.texture.Height / 2f;
 
-        this.weapon = new Weapon(this.posUpdater, worldBounds, new Size((int)this.texture.Width, (int)this.texture.Height));
+        this.keyboard = HardwareFactory.GetKeyboard();
+
+        this.weapon = weapon;
 
         // Set the starting position of the ship to the center of the world
-        this.shipPos = new Vector2(worldBounds.Width / 2f, worldBounds.Height - (worldBounds.Height / 4f));
+        this.shipPos = new Vector2(this.worldBounds.Width / 2f, this.worldBounds.Height - (this.worldBounds.Height / 4f));
+        var shipSize = new SizeF(this.texture.Width, this.texture.Height);
+
+        // Send a signal of the ship data
+        shipSignal.Push(new ShipData { ShipPos = this.shipPos, ShipSize = shipSize }, SignalIds.ShipUpdate);
     }
 
     /// <summary>
@@ -68,8 +94,16 @@ public class Ship : IUpdatable, IDrawable
         UpdateKeyStates();
         MoveShip(frameTime);
 
+        var shouldSwapWeapon = this.prevKeyState.IsKeyDown(KeyCode.S) &&
+                               this.currentKeyState.IsKeyUp(KeyCode.S);
+
         var shouldFireWeapon = this.prevKeyState.IsKeyDown(KeyCode.Space) &&
                                   this.currentKeyState.IsKeyUp(KeyCode.Space);
+
+        if (shouldSwapWeapon)
+        {
+            this.weapon.SwapWeapon();
+        }
 
         if (shouldFireWeapon)
         {
@@ -119,8 +153,30 @@ public class Ship : IUpdatable, IDrawable
         // Apply the movement distance to the ship's position
         this.shipPos += displacement;
 
+        // Check if the ship is past the left side of the world
+        this.shipPos.X = this.shipPos.X - this.halfWidth < 0
+            ? this.halfWidth
+            : this.shipPos.X;
+
+        // Check if the ship is past the right side of the world
+        this.shipPos.X = this.shipPos.X > this.worldBounds.Right - this.halfWidth
+            ? this.worldBounds.Right - this.halfWidth
+            : this.shipPos.X;
+
+        // Check if the ship is past the top of the world
+        this.shipPos.Y = this.shipPos.Y - this.halfHeight < 0
+            ? this.halfHeight
+            : this.shipPos.Y;
+
+        // Check if the ship is past the bottom of the world
+        this.shipPos.Y = this.shipPos.Y > this.worldBounds.Bottom - this.halfHeight
+            ? this.worldBounds.Bottom - this.halfHeight
+            : this.shipPos.Y;
+
+        var shipSize = new SizeF(this.texture.Width, this.texture.Height);
+
         // Update the position of the ship to the weapon for bullet positioning
-        this.posUpdater.Push(this.shipPos, Events.UpdatePosition);
+        this.shipSignal.Push(new ShipData { ShipPos = this.shipPos, ShipSize = shipSize }, SignalIds.ShipUpdate);
     }
 
     /// <summary>

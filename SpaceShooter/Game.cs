@@ -5,8 +5,13 @@
 namespace SpaceShooter;
 
 using System.Drawing;
+using System.Numerics;
+using Signals;
+using Signals.Data;
+using UI;
 using Velaptor;
-using Velaptor.Graphics.Renderers;
+using Velaptor.Batching;
+using Velaptor.Factories;
 using Velaptor.UI;
 
 /// <summary>
@@ -14,7 +19,10 @@ using Velaptor.UI;
 /// </summary>
 public class Game : Window
 {
+    private IWorldSignal worldSignal;
+    private IBatcher batcher;
     private Ship ship;
+    private WeaponSelectionUI weaponSelectionUI;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Game"/> class.
@@ -23,6 +31,7 @@ public class Game : Window
     {
         Title = "Space Shooter";
         Width = Height;
+        UpdateFrequency = 120;
     }
 
     /// <summary>
@@ -30,7 +39,15 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
-        this.ship = new Ship(new Rectangle(0, 0, (int)Width, (int)Height));
+        this.batcher = new RendererFactory().CreateBatcher();
+
+        this.ship = App.Factory.GetInstance<Ship>();
+        this.worldSignal = App.Factory.GetInstance<IWorldSignal>();
+        this.weaponSelectionUI = App.Factory.GetInstance<WeaponSelectionUI>();
+        this.weaponSelectionUI.Position = new Vector2(Width - 300, 23);
+
+        var worldBounds = new Rectangle(0, 0, (int)Width, (int)Height);
+        this.worldSignal.Push(new WorldData { WorldBounds = worldBounds }, SignalIds.WorldDataUpdate);
 
         base.OnLoad();
     }
@@ -43,6 +60,7 @@ public class Game : Window
     protected override void OnUpdate(FrameTime frameTime)
     {
         this.ship.Update(frameTime);
+        this.weaponSelectionUI.Update(frameTime);
 
         base.OnUpdate(frameTime);
     }
@@ -54,11 +72,12 @@ public class Game : Window
     /// <param name="frameTime">The amount of time that has passed for the current frame.</param>
     protected override void OnDraw(FrameTime frameTime)
     {
-        IRenderer.Begin();
+        this.batcher.Begin();
 
         this.ship.Render();
+        this.weaponSelectionUI.Render();
 
-        IRenderer.End();
+        this.batcher.End();
 
         base.OnDraw(frameTime);
     }
