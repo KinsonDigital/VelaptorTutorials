@@ -1,6 +1,6 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloVelaptor", "HelloVelaptor\HelloVelaptor.csproj", "{69C781F9-E4C4-41B3-91D7-8602F42E2F95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenderingText", "RenderingText\RenderingText.csproj", "{69C781F9-E4C4-41B3-91D7-8602F42E2F95}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenderingTextures", "RenderingTextures\RenderingTextures.csproj", "{F16A9359-B187-4203-ABBA-C4BBDC59D3F8}"
 EndProject
