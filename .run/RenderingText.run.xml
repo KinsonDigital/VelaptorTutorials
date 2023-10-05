@@ -1,4 +1,4 @@
-﻿<component name="ProjectRunConfigurationManager">
+<component name="ProjectRunConfigurationManager">
   <configuration default="false" name="RenderingText" type="DotNetProject" factoryName=".NET Project">
     <option name="EXE_PATH" value="$PROJECT_DIR$/RenderingText/bin/Debug/net7.0/RenderingText.exe" />
     <option name="PROGRAM_PARAMETERS" value="" />
