@@ -9,6 +9,7 @@ using Velaptor.Content.Fonts;
 using Velaptor.Factories;
 using Velaptor.Graphics.Renderers;
 using System.Drawing;
+using System.Numerics;
 using Velaptor.Batching;
 using Velaptor.UI;
 
@@ -17,23 +18,23 @@ using Velaptor.UI;
 /// </summary>
 public class Game : Window
 {
+    private const string Text = "Hello Velaptor!";
     private readonly Random random = new (); // Creates random numbers
-    private readonly IFontRenderer fontRenderer; // Renders text
-    private readonly IBatcher batcher;
+    private IFontRenderer? fontRenderer; // Renders text
+    private IBatcher? batcher;
     private IFont? font; // The type of font
+    private Vector2 velocity = new (100, 100);
+    private Vector2 position = new (400, 400);
     private Color textColor = Color.White; // The color of the text
-    private double elapsedMs; // Total amount of time that has passed in milliseconds
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Game"/> class.
     /// </summary>
     public Game()
     {
-        Title = "Hello Velaptor";
-        var rendererFactory = new RendererFactory();
-        this.fontRenderer = rendererFactory.CreateFontRenderer();
-
-        this.batcher = rendererFactory.CreateBatcher();
+        Title = "Render Text Guide";
+        Width = 800;
+        Height = 800;
     }
 
     /// <summary>
@@ -41,7 +42,10 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
-        this.font = ContentLoader.LoadFont("timesNewRoman-Regular", 24);
+        var rendererFactory = new RendererFactory();
+        this.fontRenderer = rendererFactory.CreateFontRenderer();
+        this.batcher = rendererFactory.CreateBatcher();
+        this.font = ContentLoader.LoadFont("TimesNewRoman-Regular", 24);
 
         base.OnLoad();
     }
@@ -53,21 +57,9 @@ public class Game : Window
     /// <param name="frameTime">The amount of time that has passed for the current frame.</param>
     protected override void OnUpdate(FrameTime frameTime)
     {
-        // Keep track of how many milli-seconds for the current frame
-        this.elapsedMs += frameTime.ElapsedTime.TotalMilliseconds;
-
-        // If 1,000 milli-seconds(1 second) has passed
-        if (this.elapsedMs >= 1000)
-        {
-            this.elapsedMs = 0; // Reset back to zero to restart the timer
-
-            var red = this.random.Next(0, 255); // Create a random red value
-            var green = this.random.Next(0, 255); // Create a random green value
-            var blue = this.random.Next(0, 255); // Create a random blue value
-
-            // Set the text color
-            this.textColor = Color.FromArgb(255, red, green, blue);
-        }
+        ProcessCollisionAndColor();
+        var displacement = this.velocity * (float)frameTime.ElapsedTime.TotalSeconds;
+        this.position += displacement;
 
         base.OnUpdate(frameTime);
     }
@@ -81,14 +73,62 @@ public class Game : Window
     {
         this.batcher.Begin();
 
-        var x = (int)(Width / 2); // Center of the window horizontally
-        var y = (int)(Height / 2); // Center of the window vertically
-
-        // Render the string to the screen with the randomized color
-        this.fontRenderer.Render(this.font, "Hello Velaptor!!", x, y, this.textColor);
+        this.fontRenderer.Render(this.font, Text, (int)this.position.X, (int)this.position.Y, this.textColor);
 
         this.batcher.End();
 
         base.OnDraw(frameTime);
+    }
+
+    /// <summary>
+    /// Processes collision with the edges of the window and randomly set the color.
+    /// </summary>
+    private void ProcessCollisionAndColor()
+    {
+        var textSize = this.font.Measure(Text);
+        var halfWidth = textSize.Width / 2;
+        var halfHeight = textSize.Height / 2;
+
+        var leftSide = this.position.X - halfWidth;
+        var top = this.position.Y - halfHeight;
+        var rightSide = this.position.X + halfWidth;
+        var bottom = this.position.Y + halfHeight;
+
+        if (leftSide <= 0)
+        {
+            this.velocity.X *= -1;
+            RandomizeColor();
+        }
+
+        if (top <= 0)
+        {
+            this.velocity.Y *= -1;
+            RandomizeColor();
+        }
+
+        if (rightSide >= Width)
+        {
+            this.velocity.X *= -1;
+            RandomizeColor();
+        }
+
+        if (bottom >= Height)
+        {
+            this.velocity.Y *= -1;
+            RandomizeColor();
+        }
+    }
+
+    /// <summary>
+    /// Randomizes the text color.
+    /// </summary>
+    private void RandomizeColor()
+    {
+        var red = this.random.Next(0, 255); // Create a random red value
+        var green = this.random.Next(0, 255); // Create a random green value
+        var blue = this.random.Next(0, 255); // Create a random blue value
+
+        // Set the text color
+        this.textColor = Color.FromArgb(255, red, green, blue);
     }
 }
