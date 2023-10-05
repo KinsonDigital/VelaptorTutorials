@@ -2,7 +2,7 @@
 // Copyright (c) KinsonDigital. All rights reserved.
 // </copyright>
 
-namespace HelloVelaptor;
+namespace RenderingText;
 
 using Velaptor;
 using Velaptor.Content.Fonts;
