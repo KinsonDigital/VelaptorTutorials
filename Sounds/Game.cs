@@ -34,7 +34,7 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
-        this.keyboard = InputFactory.CreateKeyboard();
+        this.keyboard = HardwareFactory.GetKeyboard();
         this.music = ContentLoader.LoadSound("deep-consistency");
 
         base.OnLoad();
