@@ -1,16 +1,15 @@
-﻿// <copyright file="Game.cs" company="KinsonDigital">
+// <copyright file="Game.cs" company="KinsonDigital">
 // Copyright (c) KinsonDigital. All rights reserved.
 // </copyright>
 
 namespace RenderingText;
 
+using System.Numerics;
 using Velaptor;
+using Velaptor.Batching;
 using Velaptor.Content.Fonts;
 using Velaptor.Factories;
 using Velaptor.Graphics.Renderers;
-using System.Drawing;
-using System.Numerics;
-using Velaptor.Batching;
 using Velaptor.UI;
 
 /// <summary>
@@ -19,13 +18,11 @@ using Velaptor.UI;
 public class Game : Window
 {
     private const string Text = "Hello Velaptor!";
-    private readonly Random random = new (); // Creates random numbers
-    private IFontRenderer? fontRenderer; // Renders text
-    private IBatcher? batcher;
-    private IFont? font; // The type of font
     private Vector2 velocity = new (100, 100);
     private Vector2 position = new (400, 400);
-    private Color textColor = Color.White; // The color of the text
+    private IFont? font;
+    private IFontRenderer? fontRenderer;
+    private IBatcher? batcher;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Game"/> class.
@@ -42,22 +39,25 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
+        var fontLoader = ContentLoaderFactory.CreateFontLoader();
+
+        this.font = fontLoader.Load("TimesNewRoman-Regular|size:22");
+
         var rendererFactory = new RendererFactory();
-        this.fontRenderer = rendererFactory.CreateFontRenderer();
         this.batcher = rendererFactory.CreateBatcher();
-        this.font = ContentLoader.LoadFont("TimesNewRoman-Regular", 24);
+        this.fontRenderer = rendererFactory.CreateFontRenderer();
 
         base.OnLoad();
     }
 
     /// <summary>
     /// Updates the application. Executes one time for every iteration of the game loop
-    /// and always BEFORE the <see cref="OnDraw"/> method.
+    /// and always BEFORE the <see cref="Window.OnDraw"/> method.
     /// </summary>
     /// <param name="frameTime">The amount of time that has passed for the current frame.</param>
     protected override void OnUpdate(FrameTime frameTime)
     {
-        ProcessCollisionAndColor();
+        ProcessCollision();
         var displacement = this.velocity * (float)frameTime.ElapsedTime.TotalSeconds;
         this.position += displacement;
 
@@ -66,24 +66,21 @@ public class Game : Window
 
     /// <summary>
     /// Draws to the screen. Executes one time for every iteration of the game loop
-    /// and always AFTER the <see cref="OnUpdate"/> method has finished.
+    /// and always AFTER the <see cref="OnDraw"/> method has finished.
     /// </summary>
     /// <param name="frameTime">The amount of time that has passed for the current frame.</param>
     protected override void OnDraw(FrameTime frameTime)
     {
         this.batcher.Begin();
 
-        this.fontRenderer.Render(this.font, Text, (int)this.position.X, (int)this.position.Y, this.textColor);
+        this.fontRenderer.Render(this.font, Text, (int)this.position.X, (int)this.position.Y);
 
         this.batcher.End();
 
         base.OnDraw(frameTime);
     }
 
-    /// <summary>
-    /// Processes collision with the edges of the window and randomly set the color.
-    /// </summary>
-    private void ProcessCollisionAndColor()
+    private void ProcessCollision()
     {
         var textSize = this.font.Measure(Text);
         var halfWidth = textSize.Width / 2;
@@ -97,38 +94,21 @@ public class Game : Window
         if (leftSide <= 0)
         {
             this.velocity.X *= -1;
-            RandomizeColor();
         }
 
         if (top <= 0)
         {
             this.velocity.Y *= -1;
-            RandomizeColor();
         }
 
         if (rightSide >= Width)
         {
             this.velocity.X *= -1;
-            RandomizeColor();
         }
 
         if (bottom >= Height)
         {
             this.velocity.Y *= -1;
-            RandomizeColor();
         }
-    }
-
-    /// <summary>
-    /// Randomizes the text color.
-    /// </summary>
-    private void RandomizeColor()
-    {
-        var red = this.random.Next(0, 255); // Create a random red value
-        var green = this.random.Next(0, 255); // Create a random green value
-        var blue = this.random.Next(0, 255); // Create a random blue value
-
-        // Set the text color
-        this.textColor = Color.FromArgb(255, red, green, blue);
     }
 }
