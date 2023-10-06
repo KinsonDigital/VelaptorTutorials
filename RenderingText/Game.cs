@@ -4,6 +4,7 @@
 
 namespace RenderingText;
 
+using System.Drawing;
 using System.Numerics;
 using Velaptor;
 using Velaptor.Batching;
@@ -18,11 +19,13 @@ using Velaptor.UI;
 public class Game : Window
 {
     private const string Text = "Hello Velaptor!";
-    private Vector2 velocity = new (100, 100);
-    private Vector2 position = new (400, 400);
+    private readonly Random random = new ();
     private IFont? font;
     private IFontRenderer? fontRenderer;
     private IBatcher? batcher;
+    private Vector2 velocity = new (200, 200);
+    private Vector2 position = new (400, 400);
+    private Color textColor = Color.White;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Game"/> class.
@@ -73,7 +76,7 @@ public class Game : Window
     {
         this.batcher.Begin();
 
-        this.fontRenderer.Render(this.font, Text, (int)this.position.X, (int)this.position.Y);
+        this.fontRenderer.Render(this.font, Text, (int)this.position.X, (int)this.position.Y, this.textColor);
 
         this.batcher.End();
 
@@ -94,21 +97,58 @@ public class Game : Window
         if (leftSide <= 0)
         {
             this.velocity.X *= -1;
+            RandomizeColor();
         }
 
         if (top <= 0)
         {
             this.velocity.Y *= -1;
+            RandomizeColor();
         }
 
         if (rightSide >= Width)
         {
             this.velocity.X *= -1;
+            RandomizeColor();
         }
 
         if (bottom >= Height)
         {
             this.velocity.Y *= -1;
+            RandomizeColor();
         }
+
+        // Left readjustment
+        this.position.X = leftSide <= 0
+            ? this.position.X + -leftSide
+            : this.position.X;
+
+        // Right readjustment
+        this.position.X = rightSide >= Width
+            ? this.position.X - (rightSide - Width)
+            : this.position.X;
+
+        // Top readjustment
+        this.position.Y = top <= 0
+            ? this.position.Y + -top
+            : this.position.Y;
+
+        // Bottom readjustment
+        this.position.Y = bottom >= Height
+            ? this.position.Y - (bottom - Height)
+            : this.position.Y;
+    }
+
+    /// <summary>
+    /// Randomizes the text color.
+    /// </summary>
+    private void RandomizeColor()
+    {
+        var red = this.random.Next(0, 255); // Create a random red value
+        var green = this.random.Next(0, 255); // Create a random green value
+        var blue = this.random.Next(0, 255); // Create a random blue value
+
+        // Set the text color
+        this.textColor = Color.FromArgb(255, red, green, blue);
     }
 }
