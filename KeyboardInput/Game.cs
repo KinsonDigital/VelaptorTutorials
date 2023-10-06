@@ -24,7 +24,7 @@ public class Game : Window
     /// <summary>
     /// Initializes a new instance of the <see cref="Game"/> class.
     /// </summary>
-    public Game() => this.keyboard = InputFactory.CreateKeyboard();
+    public Game() => this.keyboard = HardwareFactory.GetKeyboard();
 
     /// <summary>
     /// Updates the application. Executes one time for every iteration of the game loop
