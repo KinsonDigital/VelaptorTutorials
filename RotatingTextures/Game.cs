@@ -29,10 +29,8 @@ public class Game : Window
     public Game()
     {
         Title = "Rotating Textures";
-        var rendererFactory = new RendererFactory();
-        this.textureRenderer = rendererFactory.CreateTextureRenderer();
-
-        this.batcher = rendererFactory.CreateBatcher();
+        this.textureRenderer = RendererFactory.CreateTextureRenderer();
+        this.batcher = RendererFactory.CreateBatcher();
     }
 
     /// <summary>
@@ -40,8 +38,8 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
-        this.textTexture = ContentLoader.LoadTexture("text");
-        this.gearTexture = ContentLoader.LoadTexture("gear");
+        this.textTexture = ContentLoaderFactory.CreateTextureLoader().Load("text");
+        this.gearTexture = ContentLoaderFactory.CreateTextureLoader().Load("gear");
 
         base.OnLoad();
     }

@@ -37,10 +37,9 @@ public class Game : Window
         Width = 500;
         Height = 500;
 
-        var rendererFactory = new RendererFactory();
-        this.textureRenderer = rendererFactory.CreateTextureRenderer();
+        this.textureRenderer = RendererFactory.CreateTextureRenderer();
 
-        this.batcher = rendererFactory.CreateBatcher();
+        this.batcher = RendererFactory.CreateBatcher();
     }
 
     /// <summary>
@@ -49,7 +48,7 @@ public class Game : Window
     protected override void OnLoad()
     {
         // Loads the atlas.png and atlas.json file
-        var atlasData = ContentLoader.LoadAtlas("atlas");
+        var atlasData = ContentLoaderFactory.CreateAtlasLoader().Load("atlas");
 
         this.atlasTexture = atlasData.Texture;
         this.subTextureData = atlasData.GetFrames("flame");

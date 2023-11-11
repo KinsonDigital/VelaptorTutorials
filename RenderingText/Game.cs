@@ -46,9 +46,8 @@ public class Game : Window
 
         this.font = fontLoader.Load("TimesNewRoman-Regular|size:22");
 
-        var rendererFactory = new RendererFactory();
-        this.batcher = rendererFactory.CreateBatcher();
-        this.fontRenderer = rendererFactory.CreateFontRenderer();
+        this.batcher = RendererFactory.CreateBatcher();
+        this.fontRenderer = RendererFactory.CreateFontRenderer();
 
         base.OnLoad();
     }

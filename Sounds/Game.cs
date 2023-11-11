@@ -35,7 +35,7 @@ public class Game : Window
     protected override void OnLoad()
     {
         this.keyboard = HardwareFactory.GetKeyboard();
-        this.music = ContentLoader.LoadSound("deep-consistency");
+        this.music = ContentLoaderFactory.CreateSoundLoader().Load("deep-consistency");
 
         base.OnLoad();
     }

@@ -26,10 +26,8 @@ public class Game : Window
     public Game()
     {
         Title = "Render Textures";
-        var rendererFactory = new RendererFactory();
-        this.textureRenderer = rendererFactory.CreateTextureRenderer();
-
-        this.batcher = rendererFactory.CreateBatcher();
+        this.textureRenderer = RendererFactory.CreateTextureRenderer();
+        this.batcher = RendererFactory.CreateBatcher();
     }
 
     /// <summary>
@@ -37,7 +35,7 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
-        this.mascotTexture = ContentLoader.LoadTexture("velaptor-mascot");
+        this.mascotTexture = ContentLoaderFactory.CreateTextureLoader().Load("velaptor-mascot");
 
         base.OnLoad();
     }
