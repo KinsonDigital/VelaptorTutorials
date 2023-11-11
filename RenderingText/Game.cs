@@ -8,7 +8,9 @@ using System.Drawing;
 using System.Numerics;
 using Velaptor;
 using Velaptor.Batching;
+using Velaptor.Content;
 using Velaptor.Content.Fonts;
+using Velaptor.ExtensionMethods;
 using Velaptor.Factories;
 using Velaptor.Graphics.Renderers;
 using Velaptor.UI;
@@ -20,9 +22,10 @@ public class Game : Window
 {
     private const string Text = "Hello Velaptor!";
     private readonly Random random = new ();
+    private readonly ILoader<IFont>? fontLoader;
+    private readonly IFontRenderer? fontRenderer;
+    private readonly IBatcher? batcher;
     private IFont? font;
-    private IFontRenderer? fontRenderer;
-    private IBatcher? batcher;
     private Vector2 velocity = new (200, 200);
     private Vector2 position = new (400, 400);
     private Color textColor = Color.White;
@@ -35,6 +38,10 @@ public class Game : Window
         Title = "Render Text Guide";
         Width = 800;
         Height = 800;
+
+        this.fontLoader = ContentLoaderFactory.CreateFontLoader();
+        this.batcher = RendererFactory.CreateBatcher();
+        this.fontRenderer = RendererFactory.CreateFontRenderer();
     }
 
     /// <summary>
@@ -42,12 +49,7 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
-        var fontLoader = ContentLoaderFactory.CreateFontLoader();
-
-        this.font = fontLoader.Load("TimesNewRoman-Regular|size:22");
-
-        this.batcher = RendererFactory.CreateBatcher();
-        this.fontRenderer = RendererFactory.CreateFontRenderer();
+        this.font = this.fontLoader.Load("TimesNewRoman-Regular", 22);
 
         base.OnLoad();
     }
@@ -80,6 +82,15 @@ public class Game : Window
         this.batcher.End();
 
         base.OnDraw(frameTime);
+    }
+
+    /// <summary>
+    /// Unload the content to free resources.
+    /// </summary>
+    protected override void OnUnload()
+    {
+        this.fontLoader.Unload(this.font);
+        base.OnUnload();
     }
 
     private void ProcessCollision()
