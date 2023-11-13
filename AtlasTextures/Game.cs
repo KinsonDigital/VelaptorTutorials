@@ -9,6 +9,7 @@ using Velaptor.Graphics;
 using Velaptor;
 using Velaptor.Batching;
 using Velaptor.Content;
+using Velaptor.ExtensionMethods;
 using Velaptor.Factories;
 using Velaptor.Graphics.Renderers;
 using Velaptor.UI;
@@ -19,9 +20,10 @@ using Velaptor.UI;
 public class Game : Window
 {
     private readonly ITextureRenderer textureRenderer;
-    private readonly Random random = new ();
+    private readonly ILoader<IAtlasData> atlasTextureLoader;
     private readonly IBatcher batcher;
-    private ITexture? atlasTexture;
+    private readonly Random random = new ();
+    private IAtlasData? atlasData;
     private AtlasSubTextureData[]? subTextureData;
     private RenderEffects horizontalLayout;
     private float elapsedMs;
@@ -37,6 +39,7 @@ public class Game : Window
         Width = 500;
         Height = 500;
 
+        this.atlasTextureLoader = ContentLoaderFactory.CreateAtlasLoader();
         this.textureRenderer = RendererFactory.CreateTextureRenderer();
 
         this.batcher = RendererFactory.CreateBatcher();
@@ -48,12 +51,19 @@ public class Game : Window
     protected override void OnLoad()
     {
         // Loads the atlas.png and atlas.json file
-        var atlasData = ContentLoaderFactory.CreateAtlasLoader().Load("atlas");
-
-        this.atlasTexture = atlasData.Texture;
-        this.subTextureData = atlasData.GetFrames("flame");
+        this.atlasData = this.atlasTextureLoader.Load("atlas");
+        this.subTextureData = this.atlasData.GetFrames("flame");
 
         base.OnLoad();
+    }
+
+    /// <summary>
+    /// Unload the content to free resources.
+    /// </summary>
+    protected override void OnUnload()
+    {
+        this.atlasTextureLoader.Unload(this.atlasData);
+        base.OnUnload();
     }
 
     /// <summary>
@@ -116,11 +126,11 @@ public class Game : Window
         var srcRect = new Rectangle(subBounds.X, subBounds.Y, subBounds.Width, subBounds.Height);
 
         // Create the rectangle of the entire atlas.
-        var destRect = new Rectangle(x, y, (int)this.atlasTexture.Width, (int)this.atlasTexture.Height);
+        var destRect = new Rectangle(x, y, (int)this.atlasData.Texture.Width, (int)this.atlasData.Texture.Height);
 
         // Render only the sub-texture in the atlas at the center of the window
         this.textureRenderer.Render(
-            this.atlasTexture,
+            this.atlasData.Texture,
             srcRect,
             destRect,
             0.25f,

@@ -7,6 +7,7 @@ namespace RotatingTextures;
 using Velaptor;
 using Velaptor.Batching;
 using Velaptor.Content;
+using Velaptor.ExtensionMethods;
 using Velaptor.Factories;
 using Velaptor.Graphics.Renderers;
 using Velaptor.UI;
@@ -16,9 +17,10 @@ using Velaptor.UI;
 /// </summary>
 public class Game : Window
 {
+    private const float AngleSpeed = 50;
     private readonly ITextureRenderer textureRenderer;
     private readonly IBatcher batcher;
-    private readonly float angleSpeed = 50;
+    private readonly ILoader<ITexture> textureLoader;
     private ITexture? textTexture;
     private ITexture? gearTexture;
     private float angle;
@@ -29,6 +31,10 @@ public class Game : Window
     public Game()
     {
         Title = "Rotating Textures";
+        Width = 800;
+        Height = 800;
+
+        this.textureLoader = ContentLoaderFactory.CreateTextureLoader();
         this.textureRenderer = RendererFactory.CreateTextureRenderer();
         this.batcher = RendererFactory.CreateBatcher();
     }
@@ -38,10 +44,21 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
-        this.textTexture = ContentLoaderFactory.CreateTextureLoader().Load("text");
-        this.gearTexture = ContentLoaderFactory.CreateTextureLoader().Load("gear");
+        this.textTexture = this.textureLoader.Load("text");
+        this.gearTexture = this.textureLoader.Load("gear");
 
         base.OnLoad();
+    }
+
+    /// <summary>
+    /// Unload the content to free resources.
+    /// </summary>
+    protected override void OnUnload()
+    {
+        this.textureLoader.Unload(this.textTexture);
+        this.textureLoader.Unload(this.gearTexture);
+
+        base.OnUnload();
     }
 
     /// <summary>
@@ -50,7 +67,7 @@ public class Game : Window
     /// <param name="frameTime">The amount of time that has passed for the current frame.</param>
     protected override void OnUpdate(FrameTime frameTime)
     {
-        var angleVelocity = this.angleSpeed * (float)frameTime.ElapsedTime.TotalSeconds;
+        var angleVelocity = AngleSpeed * (float)frameTime.ElapsedTime.TotalSeconds;
 
         this.angle += angleVelocity;
 
