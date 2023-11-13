@@ -6,6 +6,8 @@ namespace Sounds;
 
 using CASL;
 using Velaptor;
+using Velaptor.Content;
+using Velaptor.ExtensionMethods;
 using Velaptor.Factories;
 using Velaptor.Input;
 using Velaptor.UI;
@@ -16,17 +18,22 @@ using ISound = Velaptor.Content.ISound;
 /// </summary>
 public class Game : Window
 {
-    private IAppInput<KeyboardState>? keyboard;
-    private KeyboardState prevKeyState;
+    private readonly ILoader<ISound> soundLoader;
+    private readonly IAppInput<KeyboardState> keyboard;
     private ISound? music;
+    private KeyboardState prevKeyState;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Game"/> class.
     /// </summary>
     public Game()
     {
+        Title = "Sounds";
         Width = 900;
         Height = 600;
+
+        this.keyboard = HardwareFactory.GetKeyboard();
+        this.soundLoader = ContentLoaderFactory.CreateSoundLoader();
     }
 
     /// <summary>
@@ -34,10 +41,18 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
-        this.keyboard = HardwareFactory.GetKeyboard();
-        this.music = ContentLoader.LoadSound("deep-consistency");
+        this.music = this.soundLoader.Load("deep-consistency");
 
         base.OnLoad();
+    }
+
+    /// <summary>
+    /// Unload the content to free resources.
+    /// </summary>
+    protected override void OnUnload()
+    {
+        this.soundLoader.Unload(this.music);
+        base.OnUnload();
     }
 
     /// <summary>
