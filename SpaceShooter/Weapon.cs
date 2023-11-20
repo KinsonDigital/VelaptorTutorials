@@ -4,6 +4,7 @@
 
 namespace SpaceShooter;
 
+using System.ComponentModel;
 using System.Drawing;
 using System.Numerics;
 using Carbonate.Fluent;
@@ -12,23 +13,26 @@ using Signals;
 using Signals.Data;
 using Velaptor;
 using Velaptor.Content;
+using Velaptor.ExtensionMethods;
 using Velaptor.Factories;
 using Velaptor.Graphics.Renderers;
 
 /// <summary>
 /// The ship's weapon.
 /// </summary>
-public class Weapon : IUpdatable, IDrawable
+public class Weapon : IUpdatable, IDrawable, IContentLoadable
 {
     private readonly IPushReactable<WeaponType> swapWeaponReactable;
     private readonly ITextureRenderer renderer;
-    private readonly ITexture texture;
+    private readonly ILoader<ITexture> textureLoader;
     private readonly IDisposable unsubscriber;
     private readonly List<Bullet> bullets = new ();
     private readonly int[] weaponTypeValues;
+    private ITexture? texture;
     private Rectangle worldBounds;
     private SizeF shipSize;
     private Vector2 shipPos;
+    private uint textureHeight;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Weapon"/> class.
@@ -51,12 +55,9 @@ public class Weapon : IUpdatable, IDrawable
 
         this.weaponTypeValues = Enum.GetValues(typeof(WeaponType)).Cast<int>().ToArray();
 
-        this.shipSize = shipSize;
-        var renderFactory = new RendererFactory();
-        this.renderer = renderFactory.CreateTextureRenderer();
+        this.renderer = RendererFactory.CreateTextureRenderer();
 
-        var textureLoader = ContentLoaderFactory.CreateTextureLoader();
-        this.texture = textureLoader.Load("laser");
+        this.textureLoader = ContentLoaderFactory.CreateTextureLoader();
 
         var shipSignalSubscription = ISubscriptionBuilder.Create()
             .WithId(SignalIds.ShipUpdate)
@@ -69,7 +70,32 @@ public class Weapon : IUpdatable, IDrawable
         shipSignal.Subscribe(shipSignalSubscription);
     }
 
-    public WeaponType TypeOfWeapon { get; private set; } = WeaponType.White;
+    public WeaponType TypeOfWeapon { get; private set; } = WeaponType.Orange;
+
+    public bool IsLoaded { get; private set; }
+
+    public void LoadContent()
+    {
+        if (IsLoaded)
+        {
+            return;
+        }
+
+        this.texture = this.textureLoader.Load("laser");
+        this.textureHeight = this.texture.Height;
+
+        IsLoaded = true;
+    }
+
+    public void UnloadContent()
+    {
+        if (!IsLoaded)
+        {
+            return;
+        }
+
+        this.textureLoader.Unload(this.texture);
+    }
 
     /// <summary>
     /// Updates the bullets of the weapon.
@@ -91,9 +117,18 @@ public class Weapon : IUpdatable, IDrawable
         // Render all of the bullets
         foreach (var bullet in this.bullets)
         {
-            if (bullet.IsVisible)
+            if (bullet.IsVisible && this.texture is not null)
             {
-                this.renderer.Render(this.texture, (int)bullet.Position.X, (int)bullet.Position.Y, Color.Orange);
+                var bulletClr = bullet.FiredFromWeapon switch
+                {
+                    WeaponType.Orange => Color.Orange,
+                    WeaponType.Red => Color.Red,
+                    WeaponType.Green => Color.Green,
+                    WeaponType.Blue => Color.Blue,
+                    _ => throw new InvalidEnumArgumentException(nameof(TypeOfWeapon), (int)TypeOfWeapon, typeof(WeaponType)),
+                };
+
+                this.renderer.Render(this.texture, (int)bullet.Position.X, (int)bullet.Position.Y, bulletClr);
             }
         }
     }
@@ -135,13 +170,13 @@ public class Weapon : IUpdatable, IDrawable
     /// </summary>
     public void SwapWeapon()
     {
-        if ((int)TypeOfWeapon > this.weaponTypeValues.Max())
+        if ((int)TypeOfWeapon >= this.weaponTypeValues.Max())
         {
             TypeOfWeapon = (WeaponType)this.weaponTypeValues.Min();
         }
         else
         {
-            TypeOfWeapon++;
+            TypeOfWeapon += 1;
         }
 
         // Send a notification to the UI that the weapon has been swapped
@@ -188,10 +223,11 @@ public class Weapon : IUpdatable, IDrawable
         const int bulletVerticalOffset = 15;
         var shipHalfHeight = this.shipSize.Width / 2f;
         var shipTop = this.shipPos.Y - shipHalfHeight;
-        var bulletHalfHeight = this.texture.Height / 2f;
+        var bulletHalfHeight = this.textureHeight / 2f;
         var bulletPosY = shipTop - bulletHalfHeight + bulletVerticalOffset;
 
         bullet.Position = this.shipPos with { Y = bulletPosY };
+        bullet.FiredFromWeapon = TypeOfWeapon;
 
         return bullet;
     }

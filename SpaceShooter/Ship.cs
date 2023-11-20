@@ -7,11 +7,11 @@ namespace SpaceShooter;
 using System.Drawing;
 using System.Numerics;
 using Carbonate.Fluent;
-using Carbonate.OneWay;
 using Signals;
 using Signals.Data;
 using Velaptor;
 using Velaptor.Content;
+using Velaptor.ExtensionMethods;
 using Velaptor.Factories;
 using Velaptor.Graphics.Renderers;
 using Velaptor.Input;
@@ -19,25 +19,26 @@ using Velaptor.Input;
 /// <summary>
 /// The player ship.
 /// </summary>
-public class Ship : IUpdatable, IDrawable
+public class Ship : IUpdatable, IDrawable, IContentLoadable
 {
     private const float VelocityX = 50;
     private const float VelocityY = 50;
     private const float MaxVel = 350;
     private readonly ITextureRenderer renderer;
-    private readonly ITexture texture;
+    private readonly ILoader<ITexture> contentLoader;
     private readonly IAppInput<KeyboardState> keyboard;
     private readonly Vector2 minVelocity = new (-MaxVel, -MaxVel);
     private readonly Vector2 maxVelocity = new (MaxVel, MaxVel);
     private readonly IShipSignal shipSignal;
     private readonly Weapon weapon;
-    private readonly float halfWidth;
-    private readonly float halfHeight;
+    private ITexture? texture;
     private Rectangle worldBounds;
     private KeyboardState currentKeyState;
     private KeyboardState prevKeyState;
     private Vector2 shipPos;
     private Vector2 velocity;
+    private float halfWidth;
+    private float halfHeight;
     private bool leftKeyDown;
     private bool rightKeyDown;
     private bool upKeyDown;
@@ -62,14 +63,8 @@ public class Ship : IUpdatable, IDrawable
 
         this.shipSignal = shipSignal;
 
-        var renderFactory = new RendererFactory();
-        this.renderer = renderFactory.CreateTextureRenderer();
-
-        var contentLoader = ContentLoaderFactory.CreateTextureLoader();
-        this.texture = contentLoader.Load("ghost-ship");
-
-        this.halfWidth = this.texture.Width / 2f;
-        this.halfHeight = this.texture.Height / 2f;
+        this.renderer = RendererFactory.CreateTextureRenderer();
+        this.contentLoader = ContentLoaderFactory.CreateTextureLoader();
 
         this.keyboard = HardwareFactory.GetKeyboard();
 
@@ -77,10 +72,38 @@ public class Ship : IUpdatable, IDrawable
 
         // Set the starting position of the ship to the center of the world
         this.shipPos = new Vector2(this.worldBounds.Width / 2f, this.worldBounds.Height - (this.worldBounds.Height / 4f));
+    }
+
+    public bool IsLoaded { get; }
+
+    public void LoadContent()
+    {
+        if (IsLoaded)
+        {
+            return;
+        }
+
+        this.texture = this.contentLoader.Load("ghost-ship");
+        this.halfWidth = this.texture.Width / 2f;
+        this.halfHeight = this.texture.Height / 2f;
+
+        this.weapon.LoadContent();
+
         var shipSize = new SizeF(this.texture.Width, this.texture.Height);
 
         // Send a signal of the ship data
-        shipSignal.Push(new ShipData { ShipPos = this.shipPos, ShipSize = shipSize }, SignalIds.ShipUpdate);
+        this.shipSignal.Push(new ShipData { ShipPos = this.shipPos, ShipSize = shipSize }, SignalIds.ShipUpdate);
+    }
+
+    public void UnloadContent()
+    {
+        if (!IsLoaded)
+        {
+            return;
+        }
+
+        this.contentLoader.Unload(this.texture);
+        this.weapon.UnloadContent();
     }
 
     /// <summary>

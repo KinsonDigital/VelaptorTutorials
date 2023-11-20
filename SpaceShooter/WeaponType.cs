@@ -6,7 +6,7 @@ namespace SpaceShooter;
 
 public enum WeaponType
 {
-    White,
+    Orange,
     Red,
     Green,
     Blue

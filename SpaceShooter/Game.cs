@@ -19,10 +19,10 @@ using Velaptor.UI;
 /// </summary>
 public class Game : Window
 {
-    private IWorldSignal worldSignal;
-    private IBatcher batcher;
-    private Ship ship;
-    private WeaponSelectionUI weaponSelectionUI;
+    private readonly IBatcher batcher;
+    private readonly IWorldSignal worldSignal;
+    private readonly Ship ship;
+    private readonly WeaponSelectionUI weaponSelectionUi;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Game"/> class.
@@ -32,6 +32,11 @@ public class Game : Window
         Title = "Space Shooter";
         Width = Height;
         UpdateFrequency = 120;
+
+        this.batcher = RendererFactory.CreateBatcher();
+        this.ship = App.Factory.GetInstance<Ship>();
+        this.worldSignal = App.Factory.GetInstance<IWorldSignal>();
+        this.weaponSelectionUi = App.Factory.GetInstance<WeaponSelectionUI>();
     }
 
     /// <summary>
@@ -39,17 +44,22 @@ public class Game : Window
     /// </summary>
     protected override void OnLoad()
     {
-        this.batcher = new RendererFactory().CreateBatcher();
-
-        this.ship = App.Factory.GetInstance<Ship>();
-        this.worldSignal = App.Factory.GetInstance<IWorldSignal>();
-        this.weaponSelectionUI = App.Factory.GetInstance<WeaponSelectionUI>();
-        this.weaponSelectionUI.Position = new Vector2(Width - 300, 23);
+        this.weaponSelectionUi.Position = new Vector2(Width - 300, 23);
 
         var worldBounds = new Rectangle(0, 0, (int)Width, (int)Height);
         this.worldSignal.Push(new WorldData { WorldBounds = worldBounds }, SignalIds.WorldDataUpdate);
 
+        this.ship.LoadContent();
+        this.weaponSelectionUi.LoadContent();
+
         base.OnLoad();
+    }
+
+    protected override void OnUnload()
+    {
+        this.ship.UnloadContent();
+        this.weaponSelectionUi.UnloadContent();
+        base.OnUnload();
     }
 
     /// <summary>
@@ -60,7 +70,7 @@ public class Game : Window
     protected override void OnUpdate(FrameTime frameTime)
     {
         this.ship.Update(frameTime);
-        this.weaponSelectionUI.Update(frameTime);
+        this.weaponSelectionUi.Update(frameTime);
 
         base.OnUpdate(frameTime);
     }
@@ -75,7 +85,7 @@ public class Game : Window
         this.batcher.Begin();
 
         this.ship.Render();
-        this.weaponSelectionUI.Render();
+        this.weaponSelectionUi.Render();
 
         this.batcher.End();
 

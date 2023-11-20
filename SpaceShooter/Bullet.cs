@@ -35,6 +35,11 @@ public class Bullet
     public bool IsVisible { get; set; }
 
     /// <summary>
+    /// Gets or or sets the type of weapon that the bullet was fired from.
+    /// </summary>
+    public WeaponType FiredFromWeapon { get; set; }
+
+    /// <summary>
     /// Updates the bullet.
     /// </summary>
     /// <param name="frameTime">The total amount of time for the current frame.</param>

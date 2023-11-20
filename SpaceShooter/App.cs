@@ -38,6 +38,7 @@ public static class App
         isInitialized = true;
 
     }
+
     private static void SetupSignaling()
     {
         factory.Register<IWorldSignal, WorldSignal>(Lifestyle.Singleton);
