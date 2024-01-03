@@ -21,7 +21,7 @@ public class Game : Window
     /// <summary>
     /// Initializes a new instance of the <see cref="Game"/> class.
     /// </summary>
-    public Game() => this.mouse = InputFactory.CreateMouse();
+    public Game() => this.mouse = HardwareFactory.GetMouse();
 
     /// <summary>
     /// Updates the application. Executes one time for every iteration of the game loop
